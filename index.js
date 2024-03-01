@@ -1,20 +1,27 @@
-require('dotenv').config();
-
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const PORT = process.env.PORT || 7000;
+require('dotenv').config();
+
+const Post = require('./models/Post.js');
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.post('/', (req, res) => {
-	console.log('req ==>', req.body);
-	res.status(200).json('server works');
+app.post('/', async (req, res) => {
+	try {
+		const { author, title, content, picture } = req.body;
+		const post = await Post.create({ author, title, content, picture });
+		res.json(post);
+	} catch (error) {
+		res.status(500).json(error);
+	}
 });
+
+const PORT = process.env.PORT || 7000;
 
 const startApp = async () => {
 	try {
