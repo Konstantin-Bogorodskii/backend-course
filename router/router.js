@@ -1,23 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/posts');
-router.get('/posts/:id');
+const PostController = require('../controllers/PostController.js');
 
-const Post = require('../models/Post.js');
+router.get('/posts', PostController.getAllPosts);
 
-router.post('/posts', async (req, res) => {
-	try {
-		const { author, title, content, picture } = req.body;
-		const post = await Post.create({ author, title, content, picture });
-		res.json(post);
-	} catch (error) {
-		res.status(500).json(error);
-	}
-});
+router.get('/posts/:id', PostController.getPostById);
 
-router.put('/posts');
+router.post('/posts', PostController.createPost);
 
-router.delete('/posts/:id');
+router.put('/posts/:id', PostController.updatePost);
+
+router.delete('/posts/:id', PostController.deletePost);
 
 module.exports = router;
